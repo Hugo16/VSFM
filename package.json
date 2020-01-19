@@ -1,0 +1,40 @@
+{
+  "name": "vsfm",
+  "version": "1.0.0",
+  "description": "vsfm",
+  "main": "./main/index.js",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win --x64"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Hugo16/VSFM.git"
+  },
+  "author": "Hugo16",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Hugo16/VSFM/issues"
+  },
+  "homepage": "https://github.com/Hugo16/VSFM#readme",
+  "devDependencies": {
+    "electron": "^7.1.7",
+    "electron-builder": "^21.2.0"
+  },
+  "build": {
+    "appId": "com.vsfm.app",
+    "win": {
+      "target": [
+        "portable"
+      ]
+    },
+    "directories":{
+      "buildResources":"./resources"
+    }
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "cheerio": "1.0.0-rc.3",
+    "iconv-lite": "0.5.0"
+  }
+}
