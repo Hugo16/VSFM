@@ -1,7 +1,7 @@
 /*
  * @Author: Hugo16
  * @Date: 2020-01-02 21:40:24
- * @LastEditTime : 2020-01-19 23:12:52
+ * @LastEditTime: 2020-03-15 12:05:20
  */
 const https = require('https');
 const http = require('http');
@@ -23,17 +23,21 @@ class Search {
                         html += d;
                     });
                     res.on('end', () => {
-                        let $ = cheerio.load(html)
-                        let data = [];
-                        $('.myui-vodlist__thumb').each((i, ele) => {
-                            data[i] = data[i] || {};
-                            data[i].img = "https://www.duboku.net" + $(ele).attr('data-original').replace('https://www.duboku.net', "");
-                        });
-                        $('h4.title a.searchkey').each((i, ele) => {
-                            data[i].link = "https://www.duboku.net" + $(ele).attr('href').replace('https://www.duboku.net', "");
-                            data[i].title = $(ele).text();
-                        });
-                        cb(data.slice(0, 10), "影院");
+                        try {
+                            let $ = cheerio.load(html)
+                            let data = [];
+                            $('.myui-vodlist__thumb').each((i, ele) => {
+                                data[i] = data[i] || {};
+                                data[i].img = "https://www.duboku.net" + $(ele).attr('data-original').replace('https://www.duboku.net', "");
+                            });
+                            $('h4.title a.searchkey').each((i, ele) => {
+                                data[i].link = "https://www.duboku.net" + $(ele).attr('href').replace('https://www.duboku.net', "");
+                                data[i].title = $(ele).text();
+                            });
+                            cb(data.slice(0, 10), "影院");
+                        } catch (error) {
+                            cb([{ title: "错误", img: "https://s1.ax1x.com/2020/03/15/81oWRA.png", link: "https://github.com/Hugo16/VSFM/issues", img: "https://s1.ax1x.com/2020/03/15/81oWRA.png", link: "https://github.com/Hugo16/VSFM/issues" }], "影院")
+                        }
                     })
                 }).on('error', (e) => {
                     console.error(e);
@@ -41,7 +45,7 @@ class Search {
             }; break;
             case "天天爱去": {
                 // 天天爱去
-                http.get('http://www.tt27.tv/search.asp?searchword=' + toUrlGbk(keyword) + "&submit=%CB%D1+%CB%F7", (res) => {
+                https.get('https://www.tt27.tv/search.asp?searchword=' + toUrlGbk(keyword) + "&submit=%CB%D1+%CB%F7", (res) => {
                     let html;
                     res.on('data', (d) => {
                         // 从gzip解压缩
@@ -53,17 +57,23 @@ class Search {
                         html += d;
                     });
                     res.on('end', () => {
-                        let $ = cheerio.load(html)
-                        let data = [];
-                        $('.mlist li a img').each((i, ele) => {
-                            data[i] = data[i] || {};
-                            data[i].img = $(ele).attr('src');
-                        });
-                        $('.mlist li a.p').each((i, ele) => {
-                            data[i].link = "http://www.tt27.tv" + $(ele).attr('href').replace('http://www.tt27.tv', "");
-                            data[i].title = $(ele).attr('title');
-                        });
-                        cb(data.slice(0, 10), "影院");
+                        try {
+                            console.log(html);
+                            
+                            let $ = cheerio.load(html)
+                            let data = [];
+                            $('.mlist li a img').each((i, ele) => {
+                                data[i] = data[i] || {};
+                                data[i].img = $(ele).attr('data-cfsrc');
+                            });
+                            $('.mlist li a.p').each((i, ele) => {
+                                data[i].link = "http://www.tt27.tv" + $(ele).attr('href').replace('http://www.tt27.tv', "");
+                                data[i].title = $(ele).attr('title');
+                            });
+                            cb(data.slice(0, 10), "影院");
+                        } catch (error) {
+                            cb([{ title: "错误", img: "https://s1.ax1x.com/2020/03/15/81oWRA.png", link: "https://github.com/Hugo16/VSFM/issues" }], "影院")
+                        }
                     })
                 }).on('error', (e) => {
                     console.error(e);
@@ -83,17 +93,21 @@ class Search {
                         html += d;
                     });
                     res.on('end', () => {
-                        let $ = cheerio.load(html)
-                        let data = [];
-                        $('ul.list-unstyled li p.image a img').each((i, ele) => {
-                            data[i] = data[i] || {};
-                            data[i].img = $(ele).attr('data-original');
-                            data[i].title = $(ele).attr('alt');
-                        });
-                        $('ul.list-unstyled li p.image a').each((i, ele) => {
-                            data[i].link = "https://pianji.net" + $(ele).attr('href').replace('https://pianji.net', "");
-                        });
-                        cb(data.slice(0, 10), "影院");
+                        try {
+                            let $ = cheerio.load(html)
+                            let data = [];
+                            $('ul.list-unstyled li p.image a img').each((i, ele) => {
+                                data[i] = data[i] || {};
+                                data[i].img = $(ele).attr('data-original');
+                                data[i].title = $(ele).attr('alt');
+                            });
+                            $('ul.list-unstyled li p.image a').each((i, ele) => {
+                                data[i].link = "https://pianji.net" + $(ele).attr('href').replace('https://pianji.net', "");
+                            });
+                            cb(data.slice(0, 10), "影院");
+                        } catch (error) {
+                            cb([{ title: "错误", img: "https://s1.ax1x.com/2020/03/15/81oWRA.png", link: "https://github.com/Hugo16/VSFM/issues" }], "影院")
+                        }
                     })
                 }).on('error', (e) => {
                     console.error(e);
@@ -113,17 +127,21 @@ class Search {
                         html += d;
                     });
                     res.on('end', () => {
-                        let $ = cheerio.load(html)
-                        let data = [];
-                        $('dl.content dt a.videopic').each((i, ele) => {
-                            data[i] = data[i] || {};
-                            data[i].img = $(ele).attr('style').split("(")[1].split(")")[0];
-                        });
-                        $('dl.content dd div.head h3 a').each((i, ele) => {
-                            data[i].link = "http://www.haojuwu.net" + $(ele).attr('href').replace('http://www.haojuwu.net', "");
-                            data[i].title = $(ele).text();
-                        });
-                        cb(data.slice(0, 10), "影院");
+                        try {
+                            let $ = cheerio.load(html)
+                            let data = [];
+                            $('dl.content dt a.videopic').each((i, ele) => {
+                                data[i] = data[i] || {};
+                                data[i].img = $(ele).attr('style').split("(")[1].split(")")[0];
+                            });
+                            $('dl.content dd div.head h3 a').each((i, ele) => {
+                                data[i].link = "http://www.haojuwu.net" + $(ele).attr('href').replace('http://www.haojuwu.net', "");
+                                data[i].title = $(ele).text();
+                            });
+                            cb(data.slice(0, 10), "影院");
+                        } catch (error) {
+                            cb([{ title: "错误", img: "https://s1.ax1x.com/2020/03/15/81oWRA.png", link: "https://github.com/Hugo16/VSFM/issues" }], "影院")
+                        }
                     })
                 }).on('error', (e) => {
                     console.error(e);
@@ -143,17 +161,21 @@ class Search {
                         html += d;
                     });
                     res.on('end', () => {
-                        let $ = cheerio.load(html)
-                        let data = [];
-                        $('ul.serach-ul li a.list-img img').each((i, ele) => {
-                            data[i] = data[i] || {};
-                            data[i].img = "http://www.86cg.com" + $(ele).attr('data-url').replace('http://www.86cg.com', "");
-                        });
-                        $('ul.serach-ul li a.list-img').each((i, ele) => {
-                            data[i].link = "http://www.86cg.com" + $(ele).attr('href').replace('http://www.86cg.com', "");
-                            data[i].title = $(ele).attr('title');
-                        });
-                        cb(data.slice(0, 10), "影院");
+                        try {
+                            let $ = cheerio.load(html)
+                            let data = [];
+                            $('ul.serach-ul li a.list-img img').each((i, ele) => {
+                                data[i] = data[i] || {};
+                                data[i].img = "http://www.86cg.com" + $(ele).attr('data-url').replace('http://www.86cg.com', "");
+                            });
+                            $('ul.serach-ul li a.list-img').each((i, ele) => {
+                                data[i].link = "http://www.86cg.com" + $(ele).attr('href').replace('http://www.86cg.com', "");
+                                data[i].title = $(ele).attr('title');
+                            });
+                            cb(data.slice(0, 10), "影院");
+                        } catch (error) {
+                            cb([{ title: "错误", img: "https://s1.ax1x.com/2020/03/15/81oWRA.png", link: "https://github.com/Hugo16/VSFM/issues" }], "影院")
+                        }
                     })
                 }).on('error', (e) => {
                     console.error(e);
@@ -170,21 +192,25 @@ class Search {
                         html += d;
                     });
                     res.on('end', () => {
-                        if (!html) {
-                            cb([],"影院");
-                            return;
+                        try {
+                            if (!html) {
+                                cb([], "影院");
+                                return;
+                            }
+                            let $ = cheerio.load(html.slice(html.indexOf("pagetxt") + 9, -1));
+                            let data = [];
+                            $('li a.play-pic img').each((i, ele) => {
+                                data[i] = data[i] || {};
+                                data[i].img = $(ele).attr('src');
+                            });
+                            $('li a.play-pic').each((i, ele) => {
+                                data[i].link = "https://www.vodxc.in" + $(ele).attr('href').replace('https://www.vodxc.in', "");
+                                data[i].title = $(ele).attr('title');
+                            });
+                            cb(data.slice(0, 10), "影院");
+                        } catch (error) {
+                            cb([{ title: "错误", img: "https://s1.ax1x.com/2020/03/15/81oWRA.png", link: "https://github.com/Hugo16/VSFM/issues" }], "影院")
                         }
-                        let $ = cheerio.load(html.slice(html.indexOf("pagetxt") + 9, -1));
-                        let data = [];
-                        $('li a.play-pic img').each((i, ele) => {
-                            data[i] = data[i] || {};
-                            data[i].img = $(ele).attr('src');
-                        });
-                        $('li a.play-pic').each((i, ele) => {
-                            data[i].link = "https://www.vodxc.in" + $(ele).attr('href').replace('https://www.vodxc.in', "");
-                            data[i].title = $(ele).attr('title');
-                        });
-                        cb(data.slice(0, 10), "影院");
                     })
                 }).on('error', (e) => {
                     console.error(e);
@@ -204,15 +230,19 @@ class Search {
                         html += d;
                     });
                     res.on('end', () => {
-                        let $ = cheerio.load(html)
-                        let data = [];
-                        $('div#content a.video-pic').each((i, ele) => {
-                            data[i] = data[i] || {};
-                            data[i].img = $(ele).attr('data-original');
-                            data[i].link = "https://www.qsptv.net" + $(ele).attr('href').replace('https://www.qsptv.net', "");
-                            data[i].title = $(ele).attr('title');
-                        });
-                        cb(data.slice(0, 10), "影院");
+                        try {
+                            let $ = cheerio.load(html)
+                            let data = [];
+                            $('div#content a.video-pic').each((i, ele) => {
+                                data[i] = data[i] || {};
+                                data[i].img = $(ele).attr('data-original');
+                                data[i].link = "https://www.qsptv.net" + $(ele).attr('href').replace('https://www.qsptv.net', "");
+                                data[i].title = $(ele).attr('title');
+                            });
+                            cb(data.slice(0, 10), "影院");
+                        } catch (error) {
+                            cb([{ title: "错误", img: "https://s1.ax1x.com/2020/03/15/81oWRA.png", link: "https://github.com/Hugo16/VSFM/issues" }], "影院")
+                        }
                     })
                 }).on('error', (e) => {
                     console.error(e);
@@ -234,17 +264,21 @@ class Search {
                         html += d;
                     });
                     res.on('end', () => {
-                        let $ = cheerio.load(html)
-                        let data = [];
-                        $('ul li div.list_lis_mov>a').each((i, ele) => {
-                            data[i] = data[i] || {};
-                            data[i].link = "https://www.xunleiyy.com" + $(ele).attr('href').replace('https://www.xunleiyy.com', "");
-                        });
-                        $('ul li div.list_lis_mov a div.imgs img').each((i, ele) => {
-                            data[i].img = $(ele).attr('data-echo');
-                            data[i].title = $(ele).attr('alt');
-                        });
-                        cb(data.slice(0, 10), "影院");
+                        try {
+                            let $ = cheerio.load(html)
+                            let data = [];
+                            $('ul li div.list_lis_mov>a').each((i, ele) => {
+                                data[i] = data[i] || {};
+                                data[i].link = "https://www.xunleiyy.com" + $(ele).attr('href').replace('https://www.xunleiyy.com', "");
+                            });
+                            $('ul li div.list_lis_mov a div.imgs img').each((i, ele) => {
+                                data[i].img = $(ele).attr('data-echo');
+                                data[i].title = $(ele).attr('alt');
+                            });
+                            cb(data.slice(0, 10), "影院");
+                        } catch (error) {
+                            cb([{ title: "错误", img: "https://s1.ax1x.com/2020/03/15/81oWRA.png", link: "https://github.com/Hugo16/VSFM/issues" }], "影院")
+                        }
                     })
                 }).on('error', (e) => {
                     console.error(e);
@@ -263,17 +297,21 @@ class Search {
                         html += d;
                     });
                     res.on('end', () => {
-                        let $ = cheerio.load(html)
-                        let data = [];
-                        $('.fire>.pics>ul>li>a').each((i, ele) => {
-                            data[i] = data[i] || {};
-                            data[i].link = "http://www.imomoe.in" + $(ele).attr('href').replace('http://www.imomoe.in', "");
-                        });
-                        $('.fire>.pics>ul>li>a>img').each((i, ele) => {
-                            data[i].img = $(ele).attr('src');
-                            data[i].title = $(ele).attr('alt');
-                        });
-                        cb(data.slice(0, 10), "动漫");
+                        try {
+                            let $ = cheerio.load(html)
+                            let data = [];
+                            $('.fire>.pics>ul>li>a').each((i, ele) => {
+                                data[i] = data[i] || {};
+                                data[i].link = "http://www.imomoe.in" + $(ele).attr('href').replace('http://www.imomoe.in', "");
+                            });
+                            $('.fire>.pics>ul>li>a>img').each((i, ele) => {
+                                data[i].img = $(ele).attr('src');
+                                data[i].title = $(ele).attr('alt');
+                            });
+                            cb(data.slice(0, 10), "动漫");
+                        } catch (error) {
+                            cb([{ title: "错误", img: "https://s1.ax1x.com/2020/03/15/81oWRA.png", link: "https://github.com/Hugo16/VSFM/issues" }], "动漫")
+                        }
                     })
                 }).on('error', (e) => {
                     console.error(e);
@@ -295,17 +333,21 @@ class Search {
                         html += d;
                     });
                     res.on('end', () => {
-                        let $ = cheerio.load(html)
-                        let data = [];
-                        $('.v_tb>ul>li>a').each((i, ele) => {
-                            data[i] = data[i] || {};
-                            data[i].link = "http://www.bimibimi.tv" + $(ele).attr('href').replace('http://www.bimibimi.tv', "");
-                            data[i].title = $(ele).attr('title');
-                        });
-                        $('.v_tb>ul>li>a>img').each((i, ele) => {
-                            data[i].img = $(ele).attr('data-original');
-                        });
-                        cb(data.slice(0, 10), "动漫");
+                        try {
+                            let $ = cheerio.load(html)
+                            let data = [];
+                            $('.v_tb>ul>li>a').each((i, ele) => {
+                                data[i] = data[i] || {};
+                                data[i].link = "http://www.bimibimi.tv" + $(ele).attr('href').replace('http://www.bimibimi.tv', "");
+                                data[i].title = $(ele).attr('title');
+                            });
+                            $('.v_tb>ul>li>a>img').each((i, ele) => {
+                                data[i].img = $(ele).attr('data-original');
+                            });
+                            cb(data.slice(0, 10), "动漫");
+                        } catch (error) {
+                            cb([{ title: "错误", img: "https://s1.ax1x.com/2020/03/15/81oWRA.png", link: "https://github.com/Hugo16/VSFM/issues" }], "动漫")
+                        }
                     })
                 }).on('error', (e) => {
                     console.error(e);
@@ -327,17 +369,21 @@ class Search {
                         html += d;
                     });
                     res.on('end', () => {
-                        let $ = cheerio.load(html)
-                        let data = [];
-                        $('ul.show-list>li>a').each((i, ele) => {
-                            data[i] = data[i] || {};
-                            data[i].link = "http://www.zzzfun.com" + $(ele).attr('href').replace('http://www.zzzfun.com', "");
-                        });
-                        $('ul.show-list>li>a>img').each((i, ele) => {
-                            data[i].img = $(ele).attr('original') || $(ele).attr('src');
-                            data[i].title = $(ele).attr('alt');
-                        });
-                        cb(data.slice(0, 10), "动漫");
+                        try {
+                            let $ = cheerio.load(html)
+                            let data = [];
+                            $('ul.show-list>li>a').each((i, ele) => {
+                                data[i] = data[i] || {};
+                                data[i].link = "http://www.zzzfun.com" + $(ele).attr('href').replace('http://www.zzzfun.com', "");
+                            });
+                            $('ul.show-list>li>a>img').each((i, ele) => {
+                                data[i].img = $(ele).attr('original') || $(ele).attr('src');
+                                data[i].title = $(ele).attr('alt');
+                            });
+                            cb(data.slice(0, 10), "动漫");
+                        } catch (error) {
+                            cb([{ title: "错误", img: "https://s1.ax1x.com/2020/03/15/81oWRA.png", link: "https://github.com/Hugo16/VSFM/issues" }], "动漫")
+                        }
                     })
                 }).on('error', (e) => {
                     console.error(e);
@@ -359,17 +405,21 @@ class Search {
                         html += d;
                     });
                     res.on('end', () => {
-                        let $ = cheerio.load(html)
-                        let data = [];
-                        $('.list3_cn_box .cn_box2>.cn_box_box3>.bor_img3_right>a').each((i, ele) => {
-                            data[i] = data[i] || {};
-                            data[i].link = "https://www.meijutt.tv" + $(ele).attr('href').replace('https://www.meijutt.tv', "");
-                        });
-                        $('.list3_cn_box .cn_box2>.cn_box_box3>.bor_img3_right>a>img').each((i, ele) => {
-                            data[i].img = $(ele).attr('src');
-                            data[i].title = $(ele).attr('alt');
-                        });
-                        cb(data.slice(0, 10), "美剧");
+                        try {
+                            let $ = cheerio.load(html)
+                            let data = [];
+                            $('.list3_cn_box .cn_box2>.cn_box_box3>.bor_img3_right>a').each((i, ele) => {
+                                data[i] = data[i] || {};
+                                data[i].link = "https://www.meijutt.tv" + $(ele).attr('href').replace('https://www.meijutt.tv', "");
+                            });
+                            $('.list3_cn_box .cn_box2>.cn_box_box3>.bor_img3_right>a>img').each((i, ele) => {
+                                data[i].img = $(ele).attr('src');
+                                data[i].title = $(ele).attr('alt');
+                            });
+                            cb(data.slice(0, 10), "美剧");
+                        } catch (error) {
+                            cb([{ title: "错误", img: "https://s1.ax1x.com/2020/03/15/81oWRA.png", link: "https://github.com/Hugo16/VSFM/issues" }], "美剧")
+                        }
                     })
                 }).on('error', (e) => {
                     console.error(e);
@@ -391,19 +441,23 @@ class Search {
                         html += d;
                     });
                     res.on('end', () => {
-                        let $ = cheerio.load(html)
-                        let data = [];
-                        $('.m-movies>.u-movie>a').each((i, ele) => {
-                            data[i] = data[i] || {};
-                            data[i].link = "https://91mjw.com" + $(ele).attr('href').replace('https://91mjw.com', "");
-                        });
-                        $('.m-movies>.u-movie>a img').each((i, ele) => {
-                            data[i].img = $(ele).attr('data-original');
-                        });
-                        $('.m-movies>.u-movie>a h2').each((i, ele) => {
-                            data[i].title = $(ele).text();
-                        });
-                        cb(data.slice(0, 10), "美剧");
+                        try {
+                            let $ = cheerio.load(html)
+                            let data = [];
+                            $('.m-movies>.u-movie>a').each((i, ele) => {
+                                data[i] = data[i] || {};
+                                data[i].link = "https://91mjw.com" + $(ele).attr('href').replace('https://91mjw.com', "");
+                            });
+                            $('.m-movies>.u-movie>a img').each((i, ele) => {
+                                data[i].img = $(ele).attr('data-original');
+                            });
+                            $('.m-movies>.u-movie>a h2').each((i, ele) => {
+                                data[i].title = $(ele).text();
+                            });
+                            cb(data.slice(0, 10), "美剧");
+                        } catch (error) {
+                            cb([{ title: "错误", img: "https://s1.ax1x.com/2020/03/15/81oWRA.png", link: "https://github.com/Hugo16/VSFM/issues" }], "美剧")
+                        }
                     })
                 }).on('error', (e) => {
                     console.error(e);
@@ -425,15 +479,19 @@ class Search {
                         html += d;
                     });
                     res.on('end', () => {
-                        let $ = cheerio.load(html)
-                        let data = [];
-                        $('ul.stui-vodlist>li>div>a').each((i, ele) => {
-                            data[i] = data[i] || {};
-                            data[i].link = "https://www.zxzj.me" + $(ele).attr('href').replace('https://www.zxzj.me', "");
-                            data[i].img = $(ele).attr('data-original');
-                            data[i].title = $(ele).attr('title');
-                        });
-                        cb(data.slice(0, 10), "美剧");
+                        try {
+                            let $ = cheerio.load(html)
+                            let data = [];
+                            $('ul.stui-vodlist>li>div>a').each((i, ele) => {
+                                data[i] = data[i] || {};
+                                data[i].link = "https://www.zxzj.me" + $(ele).attr('href').replace('https://www.zxzj.me', "");
+                                data[i].img = $(ele).attr('data-original');
+                                data[i].title = $(ele).attr('title');
+                            });
+                            cb(data.slice(0, 10), "美剧");
+                        } catch (error) {
+                            cb([{ title: "错误", img: "https://s1.ax1x.com/2020/03/15/81oWRA.png", link: "https://github.com/Hugo16/VSFM/issues" }], "美剧")
+                        }
                     })
                 }).on('error', (e) => {
                     console.error(e);
@@ -455,20 +513,24 @@ class Search {
                         html += d;
                     });
                     res.on('end', () => {
-                        let $ = cheerio.load(html)
-                        let data = [];
-                        $('table>tbody>tr').each((i, ele) => {
-                            if (i > 1) {
-                                let target1 = $(ele).find("td").eq(1).find("a");
-                                let target2 = $(ele).find("td").eq(2);
+                        try {
+                            let $ = cheerio.load(html)
+                            let data = [];
+                            $('table>tbody>tr').each((i, ele) => {
+                                if (i > 1) {
+                                    let target1 = $(ele).find("td").eq(1).find("a");
+                                    let target2 = $(ele).find("td").eq(2);
 
-                                data[i-2] = data[i] || {};
-                                data[i-2].link = "http://www.zyshow.net" + target1.attr('href').replace('../', "/");
-                                data[i-2].title = target1.attr('title') + ":" + target2.text();
-                                data[i-2].img = "https://pianji.net//Public/images/no.jpg";
-                            }
-                        });
-                        cb(data.slice(0, 10), "综艺");
+                                    data[i - 2] = data[i] || {};
+                                    data[i - 2].link = "http://www.zyshow.net" + target1.attr('href').replace('../', "/");
+                                    data[i - 2].title = target1.attr('title') + ":" + target2.text();
+                                    data[i - 2].img = "https://pianji.net//Public/images/no.jpg";
+                                }
+                            });
+                            cb(data.slice(0, 10), "综艺");
+                        } catch (error) {
+                            cb([{ title: "错误", img: "https://s1.ax1x.com/2020/03/15/81oWRA.png", link: "https://github.com/Hugo16/VSFM/issues" }], "综艺")
+                        }
                     })
                 }).on('error', (e) => {
                     console.error(e);
@@ -488,7 +550,7 @@ function toUrlGbk(str) {
     return result.replace("undefined", "");
 }
 
-// (new Search()).searchAll("1", "综艺秀", (data) => {
+// (new Search()).searchAll("黑色", "天天爱去", (data) => {
 //     console.log(data);
 // })
 

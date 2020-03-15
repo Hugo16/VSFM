@@ -1,7 +1,7 @@
 <!--
  * @Author: Hugo16
  * @Date: 2019-12-24 19:28:50
- * @LastEditTime : 2020-01-19 23:16:15
+ * @LastEditTime: 2020-03-15 12:10:41
  -->
 <template>
   <div class="layout">
@@ -113,7 +113,7 @@
       </div>
     </div>
     <a-modal title="关于" v-model="config" footer>
-      <p>版本号：V1.0.0</p>
+      <p>版本号：V1.0.1</p>
     </a-modal>
   </div>
 </template>

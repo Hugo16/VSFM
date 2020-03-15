@@ -1,6 +1,6 @@
 {
   "name": "vsfm",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "vsfm",
   "main": "./main/index.js",
   "scripts": {
